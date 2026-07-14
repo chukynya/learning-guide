@@ -1,0 +1,29 @@
+name: Update roadmap progress
+description: Change the public status or note for one course.
+title: "[roadmap] "
+body:
+  - type: input
+    id: course
+    attributes:
+      label: Course ID
+      description: Copy the ID from the course's pre-filled Update on GitHub link.
+      placeholder: c-foundations
+    validations:
+      required: true
+  - type: dropdown
+    id: state
+    attributes:
+      label: State
+      options:
+        - planned
+        - in-progress
+        - completed
+        - paused
+    validations:
+      required: true
+  - type: textarea
+    id: note
+    attributes:
+      label: Note
+      description: Record the evidence, project, blocker, or next action.
+      placeholder: Finished the allocator and verified it with AddressSanitizer.
