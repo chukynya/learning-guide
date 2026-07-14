@@ -9,11 +9,11 @@ A static, fundamentals-first computer science roadmap for students who want to u
 - Native HTML/SVG roadmap graph
 - Public GitHub Issues for mutable progress and notes
 - Local browser progress with right-click and keyboard shortcuts
-- GitHub Pages deployment
+- Vercel deployment
 
 No application backend, database service, framework, or browser token is required.
 
-Right-click a course to toggle **Completed ↔ Planned**. Hover or focus it and press `P` for **In progress**, `R` for **Planned/reset**, or `D` for **Completed**. Personal state is kept in `localStorage` and wins over public Issue status.
+Right-click a course to toggle **Completed ↔ Planned**. Hover or focus it and press `S` for **In progress**, `R` for **Planned/reset**, or `D` for **Completed**. Personal state is kept in `localStorage` and wins over public Issue status.
 
 ## Run locally
 
@@ -58,8 +58,6 @@ Accepted states are `planned`, `in-progress`, `completed`, and `paused`. Course 
 
 ## Deploy
 
-1. Push `main` to GitHub.
-2. In **Settings → Pages**, choose **GitHub Actions** as the source.
-3. The included workflow builds and deploys `dist/`.
+Create a Vercel project with `./` as the root directory and **Vite** as the framework preset. Vercel builds the site into `dist/`.
 
-Vite uses relative asset paths, so the build works at `/learning-guide/` and on other static hosts.
+Vite uses relative asset paths, so the build also works on other static hosts.

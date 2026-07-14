@@ -165,7 +165,7 @@ app.innerHTML = `
           <div><span class="legend-line mixed"></span> Paid labs / mixed access</div>
           <div><span class="legend-line edge"></span> Required prerequisite</div>
           <div><span class="legend-line optional"></span> Optional companion</div>
-          <div class="shortcut-legend"><kbd>Right-click</kbd> Done ↔ Planned · hover + <kbd>P</kbd>/<kbd>R</kbd>/<kbd>D</kbd></div>
+          <div class="shortcut-legend"><kbd>Right-click</kbd> Done ↔ Planned · hover + <kbd>S</kbd>/<kbd>R</kbd>/<kbd>D</kbd></div>
           <span id="result-count" class="ml-auto"></span>
         </div>
       </div>
@@ -228,7 +228,7 @@ app.innerHTML = `
   <footer>
     <div class="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-8 text-sm sm:flex-row sm:items-center sm:justify-between sm:px-6">
       <span>Fundamentals First · built to be revised by evidence.</span>
-      <span>TS · Tailwind · daisyUI · GitHub Pages</span>
+      <span>TS · Tailwind · daisyUI · Vercel</span>
     </div>
   </footer>
 
@@ -545,7 +545,7 @@ document.addEventListener("keydown", (event) => {
     return;
   }
 
-  const shortcuts: Record<string, Progress> = { p: "in-progress", r: "planned", d: "completed" };
+  const shortcuts: Record<string, Progress> = { s: "in-progress", r: "planned", d: "completed" };
   const state = shortcuts[event.key.toLowerCase()];
   if (!state) return;
   event.preventDefault();
