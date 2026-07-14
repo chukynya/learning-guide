@@ -117,24 +117,24 @@ app.innerHTML = `
       <div class="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 lg:grid-cols-[0.7fr_1.3fr]">
         <div>
           <p class="section-kicker">Suggested starting point</p>
-          <h2>Finish before adding.</h2>
-          <p class="mt-4 max-w-md text-base-content/65">Close courses already in progress before adding more. A strong default is one build-heavy course paired with one math or theory course.</p>
+          <h2>Validate before repeating.</h2>
+          <p class="mt-4 max-w-md text-base-content/65">Prior coursework counts when its mastery check holds. Finish current work, build evidence for familiar topics, then study only the gaps.</p>
         </div>
         <ol class="focus-steps">
           <li>
             <span>01</span>
-            <div><strong>Learn the missing tools</strong><p>Turn a Linux environment into something you can inspect, reproduce, and repair.</p></div>
+            <div><strong>Finish current work</strong><p>Complete Missing Semester and Composing Programs before opening another full course.</p></div>
             <button data-open-course="missing-semester" class="btn btn-ghost btn-sm" type="button">Open →</button>
           </li>
           <li>
             <span>02</span>
-            <div><strong>Finish Composing Programs</strong><p>Complete the interpreter work; do not replace it with another Python course.</p></div>
-            <button data-open-course="composing-programs" class="btn btn-ghost btn-sm" type="button">Open →</button>
+            <div><strong>Validate C and algorithms</strong><p>Attempt the build and proof checks first; do not replay university syntax that already holds.</p></div>
+            <button data-open-course="c-foundations" class="btn btn-ghost btn-sm" type="button">Open →</button>
           </li>
           <li>
             <span>03</span>
-            <div><strong>Then pair C with one math course</strong><p>C & Memory plus Mathematics for CS is the recommended next six-to-eight week block.</p></div>
-            <button data-open-course="c-foundations" class="btn btn-ghost btn-sm" type="button">Open →</button>
+            <div><strong>Fill math and database gaps</strong><p>Use exams and query experiments to skip familiar material and expose what MySQL usage did not cover.</p></div>
+            <button data-open-course="linear-algebra" class="btn btn-ghost btn-sm" type="button">Open →</button>
           </li>
         </ol>
       </div>
