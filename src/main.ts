@@ -265,6 +265,7 @@ function isVisible(course: Course) {
 
 function renderRoadmap() {
   const visible = courses.filter(isVisible);
+  const remaining = courses.filter((course) => (progress.get(course.id) ?? course.progress) !== "completed").length;
   courseLayer.innerHTML = courses
     .map((course) => {
       const status = progress.get(course.id) ?? course.progress;
@@ -296,7 +297,10 @@ function renderRoadmap() {
     .join("");
 
   const resultCount = document.querySelector<HTMLElement>("#result-count");
-  if (resultCount) resultCount.textContent = `${visible.length} / ${courses.length} courses`;
+  if (resultCount) {
+    const filtered = accessFilter !== "all" || searchQuery;
+    resultCount.textContent = `${filtered ? `${visible.length} shown · ` : ""}${remaining} / ${courses.length} remaining`;
+  }
   requestAnimationFrame(drawEdges);
 }
 
