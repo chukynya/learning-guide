@@ -7,6 +7,7 @@ A static, fundamentals-first computer science roadmap for students who want to u
 - Vanilla TypeScript + Vite
 - Tailwind CSS 4 + daisyUI 5
 - Native HTML/SVG roadmap graph
+- Focused systems/backend path with an all-paths toggle
 - Public GitHub Issues for mutable progress and notes
 - Local browser progress with right-click and keyboard shortcuts
 - Vercel deployment

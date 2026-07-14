@@ -30,6 +30,21 @@ const progress = new Map(courses.map((course) => [course.id, course.progress]));
 const issueUpdates = new Map<string, IssueUpdate>();
 const localProgress = new Map<string, Progress>();
 const progressStorageKey = "fundamentals-first-progress-v1";
+const firstPath = new Set([
+  "missing-semester",
+  "composing-programs",
+  "c-foundations",
+  "discrete-math",
+  "nand2tetris",
+  "algorithms",
+  "computer-architecture",
+  "operating-systems",
+  "computer-networks",
+  "database-systems",
+  "java-core",
+  "spring-backend",
+]);
+let focusedPathOnly = true;
 let accessFilter = "all";
 let searchQuery = "";
 let activeCourseId: string | null = null;
@@ -116,25 +131,35 @@ app.innerHTML = `
     <section id="current-focus" class="focus-section">
       <div class="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 lg:grid-cols-[0.7fr_1.3fr]">
         <div>
-          <p class="section-kicker">Suggested starting point</p>
-          <h2>Validate before repeating.</h2>
-          <p class="mt-4 max-w-md text-base-content/65">Prior coursework counts when its mastery check holds. Finish current work, build evidence for familiar topics, then study only the gaps.</p>
+          <p class="section-kicker">Study rhythm · controlled parallelism</p>
+          <h2>Two lanes. One priority.</h2>
+          <p class="mt-4 max-w-md text-base-content/65">After the starter courses, use these dependency-safe waves. Give the primary course 7–8 hours each week and its companion 3–4; advance only when both exit checks hold.</p>
         </div>
         <ol class="focus-steps">
           <li>
             <span>01</span>
-            <div><strong>Finish current work</strong><p>Complete Missing Semester and Composing Programs before opening another full course.</p></div>
-            <button data-open-course="missing-semester" class="btn btn-ghost btn-sm" type="button">Open →</button>
-          </li>
-          <li>
-            <span>02</span>
-            <div><strong>Validate C and algorithms</strong><p>Attempt the build and proof checks first; do not replay university syntax that already holds.</p></div>
+            <div><strong>C &amp; Memory + Mathematics for CS</strong><p>C is primary; proof practice is the companion. Use diagnostics to skip material you can already demonstrate.</p></div>
             <button data-open-course="c-foundations" class="btn btn-ghost btn-sm" type="button">Open →</button>
           </li>
           <li>
+            <span>02</span>
+            <div><strong>Computer Architecture + Algorithms</strong><p>Architecture is primary after Nand Part I; validate algorithms in the companion lane.</p></div>
+            <button data-open-course="computer-architecture" class="btn btn-ghost btn-sm" type="button">Open →</button>
+          </li>
+          <li>
             <span>03</span>
-            <div><strong>Fill math and database gaps</strong><p>Use exams and query experiments to skip familiar material and expose what MySQL usage did not cover.</p></div>
-            <button data-open-course="linear-algebra" class="btn btn-ghost btn-sm" type="button">Open →</button>
+            <div><strong>Operating Systems + Modern Java Core</strong><p>Keep OS primary. Java is a smaller language-and-runtime bridge, not a framework sprint.</p></div>
+            <button data-open-course="operating-systems" class="btn btn-ghost btn-sm" type="button">Open →</button>
+          </li>
+          <li>
+            <span>04</span>
+            <div><strong>Networks + Database Systems</strong><p>Study both only after OS. Keep one primary each week; the second remains the lower-intensity companion.</p></div>
+            <button data-open-course="computer-networks" class="btn btn-ghost btn-sm" type="button">Open →</button>
+          </li>
+          <li>
+            <span>05</span>
+            <div><strong>Java Backend Fundamentals · alone</strong><p>Integrate the layers in the transfer API. Ship it before choosing ML or deeper systems.</p></div>
+            <button data-open-course="spring-backend" class="btn btn-ghost btn-sm" type="button">Open →</button>
           </li>
         </ol>
       </div>
@@ -153,6 +178,10 @@ app.innerHTML = `
               <span aria-hidden="true">⌕</span>
               <input id="course-search" type="search" class="grow" placeholder="Search courses or topics" autocomplete="off" />
             </label>
+            <div class="filter-group" aria-label="Choose roadmap scope">
+              <button type="button" data-scope-filter="first" aria-pressed="true">First path</button>
+              <button type="button" data-scope-filter="all" aria-pressed="false">All paths</button>
+            </div>
             <div class="filter-group" aria-label="Filter by access">
               <button type="button" data-access-filter="all" aria-pressed="true">All</button>
               <button type="button" data-access-filter="free" aria-pressed="false">Free</button>
@@ -174,8 +203,8 @@ app.innerHTML = `
         <div id="roadmap-stage" class="roadmap-stage" style="width: ${canvas.width}px; height: ${canvas.height}px">
           ${phases
             .map(
-              (phase) => `
-                <div class="phase-marker" style="top: ${phase.top}px">
+              (phase, index) => `
+                <div class="phase-marker" data-phase-index="${index}" style="top: ${phase.top}px">
                   <span>${escapeHtml(phase.label)}</span>
                 </div>`,
             )
@@ -197,7 +226,7 @@ app.innerHTML = `
       <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6">
         <div class="method-heading">
           <div><p class="section-kicker">The operating system</p><h2>Study like an investigator.</h2></div>
-          <p>The roadmap is long on purpose, but your active queue is not. Keep two courses at most: one build-heavy and one math/theory course.</p>
+          <p>The roadmap is long on purpose, but your active queue is not. Keep one primary course at 70% of your study time and one independent companion at 30%; never study a prerequisite beside the course that requires it.</p>
         </div>
         <div class="method-grid">
           <article><span>01</span><h3>Predict</h3><p>Before running code, write what you expect and why. A wrong prediction is valuable evidence.</p></article>
@@ -256,16 +285,24 @@ const dialog = requiredElement<HTMLDialogElement>("#course-dialog");
 const dialogContent = requiredElement<HTMLElement>("#dialog-content");
 
 function isVisible(course: Course) {
+  const matchesScope = !focusedPathOnly || Boolean(searchQuery) || firstPath.has(course.id);
   const matchesAccess = accessFilter === "all" || course.access === accessFilter;
   const haystack = [course.title, course.provider, course.summary, course.why, ...course.topics]
     .join(" ")
     .toLowerCase();
-  return matchesAccess && haystack.includes(searchQuery);
+  return matchesScope && matchesAccess && haystack.includes(searchQuery);
 }
 
 function renderRoadmap() {
   const visible = courses.filter(isVisible);
+  const compact = focusedPathOnly && !searchQuery;
   const remaining = courses.filter((course) => (progress.get(course.id) ?? course.progress) !== "completed").length;
+  stage.style.height = `${compact ? 1810 : canvas.height}px`;
+  edgeLayer.setAttribute("height", String(compact ? 1810 : canvas.height));
+  stage.querySelector<HTMLElement>("[data-target-id]")?.classList.toggle("hidden", focusedPathOnly);
+  stage.querySelectorAll<HTMLElement>("[data-phase-index]").forEach((marker) => {
+    marker.classList.toggle("hidden", focusedPathOnly && Number(marker.dataset.phaseIndex) > 3);
+  });
   courseLayer.innerHTML = courses
     .map((course) => {
       const status = progress.get(course.id) ?? course.progress;
@@ -298,7 +335,7 @@ function renderRoadmap() {
 
   const resultCount = document.querySelector<HTMLElement>("#result-count");
   if (resultCount) {
-    const filtered = accessFilter !== "all" || searchQuery;
+    const filtered = focusedPathOnly || accessFilter !== "all" || searchQuery;
     resultCount.textContent = `${filtered ? `${visible.length} shown · ` : ""}${remaining} / ${courses.length} remaining`;
   }
   requestAnimationFrame(drawEdges);
@@ -498,11 +535,20 @@ app.addEventListener("click", (event) => {
   const id = courseButton?.dataset.courseId ?? courseButton?.dataset.openCourse;
   if (id) openCourse(id);
 
-  const filter = target.closest<HTMLButtonElement>("[data-access-filter]");
-  if (filter?.dataset.accessFilter) {
-    accessFilter = filter.dataset.accessFilter;
+  const scopeButton = target.closest<HTMLButtonElement>("[data-scope-filter]");
+  if (scopeButton?.dataset.scopeFilter) {
+    focusedPathOnly = scopeButton.dataset.scopeFilter === "first";
+    document.querySelectorAll<HTMLButtonElement>("[data-scope-filter]").forEach((button) => {
+      button.setAttribute("aria-pressed", String(button === scopeButton));
+    });
+    renderRoadmap();
+  }
+
+  const accessButton = target.closest<HTMLButtonElement>("[data-access-filter]");
+  if (accessButton?.dataset.accessFilter) {
+    accessFilter = accessButton.dataset.accessFilter;
     document.querySelectorAll<HTMLButtonElement>("[data-access-filter]").forEach((button) => {
-      button.setAttribute("aria-pressed", String(button === filter));
+      button.setAttribute("aria-pressed", String(button === accessButton));
     });
     renderRoadmap();
   }

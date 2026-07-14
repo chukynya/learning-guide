@@ -470,6 +470,11 @@ input:focus-visible,
   border-top: 1px solid rgb(134 171 158 / 15%);
 }
 
+.phase-marker.hidden,
+.target-node.hidden {
+  display: none;
+}
+
 .phase-marker span {
   position: absolute;
   top: -0.62rem;

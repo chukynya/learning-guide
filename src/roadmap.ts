@@ -180,7 +180,7 @@ export const courses: Course[] = [
       },
     ],
     prerequisites: ["missing-semester", "composing-programs"],
-    progress: "in-progress",
+    progress: "planned",
     position: { x: 370, y: 408 },
   },
   {
@@ -242,7 +242,7 @@ export const courses: Course[] = [
       },
     ],
     prerequisites: ["composing-programs"],
-    progress: "in-progress",
+    progress: "planned",
     position: { x: 970, y: 408 },
   },
   {
@@ -304,7 +304,7 @@ export const courses: Course[] = [
       },
     ],
     prerequisites: ["composing-programs", "discrete-math"],
-    progress: "in-progress",
+    progress: "planned",
     position: { x: 370, y: 678 },
   },
   {
@@ -509,7 +509,7 @@ export const courses: Course[] = [
       },
     ],
     prerequisites: ["algorithms", "operating-systems"],
-    progress: "in-progress",
+    progress: "planned",
     position: { x: 970, y: 974 },
   },
   {
